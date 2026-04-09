@@ -38,6 +38,14 @@ struct AddEditPersonView: View {
         return trimmedName.isEmpty
     }
 
+    private var avatarGradient: LinearGradient {
+        LinearGradient(
+            colors: [Color(hex: "#C084FC").opacity(0.85), Color(hex: "#818CF8").opacity(0.7)],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+
     var body: some View {
         NavigationStack {
             Form {
@@ -52,12 +60,7 @@ struct AddEditPersonView: View {
                         } label: {
                             ZStack {
                                 Circle()
-                                    .fill(LinearGradient(
-                                        colors: [Color(hex: "#C084FC").opacity(0.85),
-                                                 Color(hex: "#818CF8").opacity(0.7)],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ))
+                                    .fill(avatarGradient)
                                     .frame(width: 40, height: 40)
                                 Text(emoji)
                                     .font(.title3)
