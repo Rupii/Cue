@@ -9,8 +9,9 @@ struct AddEditPersonView: View {
     let person: Person?  // nil = add mode, non-nil = edit mode
 
     @State private var name: String = ""
-    @State private var emoji: String = ""
+    @State private var emoji: String = "👤"
     @State private var relation: String = ""
+    @State private var showAvatarPicker = false
 
     // Entry fields
     @State private var sizeCategory: String = ""
@@ -41,14 +42,30 @@ struct AddEditPersonView: View {
         NavigationStack {
             Form {
                 Section("Identity") {
-                    TextField("Name", text: $name)
-                    TextField("Emoji (optional)", text: $emoji)
-                        .onChange(of: emoji) { _, newValue in
-                            // Limit emoji to single character
-                            if newValue.count > 1 {
-                                emoji = String(newValue.prefix(1))
+                    // Avatar row
+                    HStack {
+                        Text("Avatar")
+                            .foregroundStyle(.primary)
+                        Spacer()
+                        Button {
+                            showAvatarPicker = true
+                        } label: {
+                            ZStack {
+                                Circle()
+                                    .fill(LinearGradient(
+                                        colors: [Color(hex: "#C084FC").opacity(0.85),
+                                                 Color(hex: "#818CF8").opacity(0.7)],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ))
+                                    .frame(width: 40, height: 40)
+                                Text(emoji)
+                                    .font(.title3)
                             }
                         }
+                        .buttonStyle(.plain)
+                    }
+                    TextField("Name", text: $name)
                     TextField("Relation (e.g. Partner, Mom)", text: $relation)
                 }
 
@@ -79,6 +96,10 @@ struct AddEditPersonView: View {
             }
             .onAppear { prefill() }
             .sensoryFeedback(.success, trigger: didSave)
+            .sheet(isPresented: $showAvatarPicker) {
+                AvatarPickerSheet(selectedEmoji: $emoji)
+                    .presentationDetents([.medium, .large])
+            }
         }
     }
 
@@ -271,7 +292,7 @@ struct AddEditPersonView: View {
     private func prefill() {
         guard let p = person else { return }
         name = p.name
-        emoji = p.emoji
+        emoji = p.emoji.isEmpty ? "👤" : p.emoji
         relation = p.relation
     }
 
@@ -282,7 +303,7 @@ struct AddEditPersonView: View {
         if let p = person {
             // Edit mode
             p.name = trimmedName
-            p.emoji = emoji.isEmpty ? "👤" : emoji
+            p.emoji = emoji
             p.relation = relation
         } else {
             // Add mode — assign next sortOrder
@@ -290,7 +311,7 @@ struct AddEditPersonView: View {
             let colorHex = ColorPalette.color(for: nextOrder)
             let newPerson = Person(
                 name: trimmedName,
-                emoji: emoji.isEmpty ? "👤" : emoji,
+                emoji: emoji,
                 relation: relation,
                 colorHex: colorHex,
                 sortOrder: nextOrder
