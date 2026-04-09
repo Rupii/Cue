@@ -1,0 +1,45 @@
+# Seedance AI Promo Video Prompt Guide (Human Interaction + Outdoor)
+
+Below is the detailed prompt list for creating an engaging promotional video for the "Cue" app. This version shows a person physically holding and interacting with the app in a bright, modern, outdoor "lifestyle" setting to make it feel vibrant and relatable.
+
+### Overall Style Settings (Use these for all clips)
+- **Aspect Ratio:** 9:16 (Vertical) for TikTok/Reels/Shorts, or 16:9 for YouTube.
+- **Style/Vibe:** Bright, sunny, outdoor lifestyle, shallow depth of field, photorealistic, cinematic lifestyle B-roll, natural sunlight, over-the-shoulder and first-person POVs.
+- **Colors:** Vibrant natural tones (greens, blues, warm sunlight) contrasting beautifully with the sleek app interfaces.
+
+---
+
+### Scene 1: Introduction (Input: `00_app_icon_9_16.png`)
+**Prompt for Seedance:**
+> "A cinematic, ultra-realistic close-up. A hand gently taps a vibrant app icon resting on an iPhone resting on a sleek marble outdoor cafe table. Beautiful morning sunlight casts soft shadows. A blurry, bustling city street with green trees in the background (strong bokeh). 4k, photorealistic commercial."
+
+---
+
+### Scene 2: The UI Reveal & Scroll (Input: `01_screenshot.png`)
+**Prompt for Seedance:**
+> "Over-the-shoulder POV shot. A young woman with a stylish watch is holding a smartphone in her left hand at a sunny outdoor park. She uses her right thumb to slowly scroll down a sleek, colorful digital interface on the screen. Lush green trees and blue skies are heavily blurred in the background with a cinematic shallow depth of field. Ultra-high definition."
+
+---
+
+### Scene 3: Feature Highlight & Tap (Input: `02_screenshot.png`)
+**Prompt for Seedance:**
+> "Close-up cinematic shot of hands holding a smartphone displaying detailed clothing sizes. The person is sitting outside on a stylish wooden deck on a beautiful sunny day. An index finger taps a button on the screen naturally. Vibrant, modern lifestyle commercial, Apple-style marketing, 4k resolution."
+
+---
+
+### Scene 4: Deep Dive (Input: `03_screenshot.png`)
+**Prompt for Seedance:**
+> "First-person perspective of someone holding a smartphone displaying a glowing profile menu while walking through a bright, contemporary outdoor shopping area. Soft lens flares from the sun interact with the sharp digital interface as the phone sways slightly with their steps. Photorealistic, handheld cinematic movement."
+
+---
+
+### Scene 5: Wrapping Up (Input: `04_screenshot.png`)
+**Prompt for Seedance:**
+> "A beautiful cinematic shot of a person relaxing under golden hour afternoon sunlight, holding a modern smartphone horizontally to showcase organized family data. The camera slowly racks focus from the person's smiling blurred face in the background to the razor-sharp mobile app interface in the foreground. Cinematic, 4k, hyper-detailed."
+
+---
+
+### Editing Advice:
+1. Generate these clips using Seedance. Adding humans *can* sometimes confuse image-to-video AI with fingers (generating 6 fingers, etc.). If a hand looks slightly weird, regenerate that specific shot or cut away quickly in the final edit!
+2. If Seedance distorts the text in the screenshots too much, open a video editor (like CapCut), place the Seedance-generated video on the bottom layer, and place the *original, clean screenshot* directly over the top of the phone screen, tracking its motion if possible.
+3. Add an upbeat, positive lifestyle acoustic or light electronic track.

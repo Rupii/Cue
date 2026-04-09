@@ -1,0 +1,42 @@
+# Xcode
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+DerivedData/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# CocoaPods
+Pods/
+*.xcworkspace
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+**/.DS_Store
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# SPM resolved (keep Package.resolved for reproducible builds if using SPM)
+# Package.resolved
+
+# Secrets / env
+*.env
+secrets.plist
+
+# Compiled output
+*.o
+*.swp
+
+# Keep CLAUDE.md
+!CLAUDE.md
