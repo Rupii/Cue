@@ -12,6 +12,7 @@ struct HomeView: View {
     @State private var showPaywall = false
     @State private var isSyncing = false
     @State private var seedDataInserted = false
+    @State private var editMode: EditMode = .inactive
     @Binding var isDarkMode: Bool
 
     var body: some View {
@@ -47,6 +48,20 @@ struct HomeView: View {
                         .transition(.opacity)
                     }
                 }
+                // Reorder toggle
+                ToolbarItem(placement: .topBarTrailing) {
+                    if !persons.isEmpty {
+                        Button {
+                            withAnimation {
+                                editMode = editMode == .active ? .inactive : .active
+                            }
+                        } label: {
+                            Image(systemName: editMode == .active ? "checkmark.circle.fill" : "arrow.up.arrow.down.circle")
+                                .font(.title3)
+                                .foregroundStyle(editMode == .active ? .green : .secondary)
+                        }
+                    }
+                }
                 // Add / Paywall button (trailing)
                 ToolbarItem(placement: .primaryAction) {
                     Button {
@@ -56,16 +71,15 @@ struct HomeView: View {
                             showPaywall = true
                         }
                     } label: {
-                        ZStack(alignment: .topTrailing) {
-                            Image(systemName: storeManager.isAtFreeLimit
-                                  ? "lock.circle.fill"
-                                  : "plus.circle.fill")
-                                .font(.title3)
-                                .foregroundStyle(storeManager.isAtFreeLimit ? .red : .blue)
-                        }
+                        Image(systemName: storeManager.isAtFreeLimit
+                              ? "lock.circle.fill"
+                              : "plus.circle.fill")
+                            .font(.title3)
+                            .foregroundStyle(storeManager.isAtFreeLimit ? .red : .blue)
                     }
                 }
             }
+            .environment(\.editMode, $editMode)
             .sheet(isPresented: $showAddPerson) {
                 AddEditPersonView(person: nil)
             }
@@ -115,22 +129,52 @@ struct HomeView: View {
     // MARK: - Subviews
 
     private var cardStackView: some View {
-        ScrollView {
-            LazyVStack(spacing: 0) {
-                ForEach(Array(persons.enumerated()), id: \.element.persistentModelID) { index, person in
-                    CardView(
-                        person: person,
-                        namespace: cardNamespace,
-                        isExpanded: false
-                    ) {
+        List {
+            ForEach(persons) { person in
+                CardView(
+                    person: person,
+                    namespace: cardNamespace,
+                    isExpanded: false
+                ) {
+                    if editMode == .inactive {
                         selectedPerson = person
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, index == 0 ? 20 : 8)
+                }
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(top: 8, leading: 20, bottom: 0, trailing: 20))
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    Button(role: .destructive) {
+                        deletePerson(person)
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
                 }
             }
-            .padding(.bottom, 20)
+            .onMove(perform: movePersons)
         }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(Color(.systemGroupedBackground))
+    }
+
+    private func deletePerson(_ person: Person) {
+        modelContext.delete(person)
+        try? modelContext.save()
+        // Reindex sortOrder after deletion
+        for (i, p) in persons.enumerated() {
+            p.sortOrder = i
+        }
+        try? modelContext.save()
+    }
+
+    private func movePersons(from source: IndexSet, to destination: Int) {
+        var reordered = persons
+        reordered.move(fromOffsets: source, toOffset: destination)
+        for (i, p) in reordered.enumerated() {
+            p.sortOrder = i
+        }
+        try? modelContext.save()
     }
 
     private var emptyStateView: some View {
