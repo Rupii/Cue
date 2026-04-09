@@ -12,6 +12,12 @@ final class Person {
     @Relationship(deleteRule: .cascade) var orders: [OrderEntry] = []
     @Relationship(deleteRule: .cascade) var notes: [NoteEntry] = []
 
+    // Max 2 special dates (e.g. Birthday, Anniversary)
+    var date1Label: String = ""
+    var date1: Date? = nil
+    var date2Label: String = ""
+    var date2: Date? = nil
+
     // TODO: add VersionedSchema before v2
 
     init(name: String, emoji: String, relation: String,
@@ -34,6 +40,18 @@ final class Person {
             $0.createdAt > $1.createdAt
         }.prefix(4)
         return (allergies, Array(combined))
+    }
+
+    /// Short pill labels for the 1–2 special dates, e.g. "🎂 Apr 12" or "💍 in 3d"
+    var datePills: [String] {
+        var pills: [String] = []
+        if let d = date1, !date1Label.isEmpty {
+            pills.append("\(date1Label): \(d.formatted(.dateTime.month(.abbreviated).day()))")
+        }
+        if let d = date2, !date2Label.isEmpty {
+            pills.append("\(date2Label): \(d.formatted(.dateTime.month(.abbreviated).day()))")
+        }
+        return pills
     }
 
     static func insertSeedData(into context: ModelContext) {

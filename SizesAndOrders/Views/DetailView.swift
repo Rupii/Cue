@@ -20,6 +20,10 @@ struct DetailView: View {
                         allergySection
                     }
 
+                    if person.date1 != nil || person.date2 != nil {
+                        datesSection
+                    }
+
                     if !person.sizes.isEmpty {
                         sectionBlock(title: "Sizes", systemImage: "ruler") {
                             ForEach(person.sizes.sorted(by: { $0.createdAt < $1.createdAt }),
@@ -110,6 +114,19 @@ struct DetailView: View {
             }
         }
         .padding(.bottom, 12)
+    }
+
+    private var datesSection: some View {
+        sectionBlock(title: "Dates", systemImage: "calendar") {
+            if let d = person.date1, !person.date1Label.isEmpty {
+                rowItem(label: person.date1Label,
+                        value: d.formatted(.dateTime.month(.wide).day().year()))
+            }
+            if let d = person.date2, !person.date2Label.isEmpty {
+                rowItem(label: person.date2Label,
+                        value: d.formatted(.dateTime.month(.wide).day().year()))
+            }
+        }
     }
 
     private func sectionBlock<Content: View>(

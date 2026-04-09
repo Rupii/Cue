@@ -34,12 +34,15 @@ struct CardView: View {
                     Spacer()
                 }
 
-                // Allergy pills (red) always first, then up to 4 recent size/order pills
+                // Allergy pills (red), date pills (blue), then recent size/order pills
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 6) {
                         let pills = person.compactPills
                         ForEach(pills.allergies, id: \.persistentModelID) { note in
                             PillView(label: note.value, style: .allergy)
+                        }
+                        ForEach(person.datePills, id: \.self) { label in
+                            PillView(label: label, style: .date)
                         }
                         ForEach(Array(pills.recent.enumerated()), id: \.offset) { _, item in
                             PillView(label: item.pillLabel, style: .standard)
@@ -58,7 +61,7 @@ struct CardView: View {
 }
 
 struct PillView: View {
-    enum Style { case allergy, standard }
+    enum Style { case allergy, date, standard }
     let label: String
     let style: Style
 
@@ -69,10 +72,16 @@ struct PillView: View {
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
             .background(
-                Capsule().fill(style == .allergy
-                    ? Color.red.opacity(0.85)
-                    : Color.white.opacity(0.2))
+                Capsule().fill(pillColor)
             )
             .foregroundStyle(.white)
+    }
+
+    private var pillColor: Color {
+        switch style {
+        case .allergy:  return Color.red.opacity(0.85)
+        case .date:     return Color.white.opacity(0.35)
+        case .standard: return Color.white.opacity(0.2)
+        }
     }
 }

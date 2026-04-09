@@ -24,6 +24,14 @@ struct AddEditPersonView: View {
     @State private var noteIsAllergy: Bool = false
     @State private var didSave = false
 
+    // Date fields
+    @State private var date1Label: String = ""
+    @State private var date1: Date = Date()
+    @State private var hasDate1: Bool = false
+    @State private var date2Label: String = ""
+    @State private var date2: Date = Date()
+    @State private var hasDate2: Bool = false
+
     // Editing state for entries
     @State private var editingSize: SizeEntry? = nil
     @State private var editingOrder: OrderEntry? = nil
@@ -72,6 +80,8 @@ struct AddEditPersonView: View {
                     TextField("Relation (e.g. Partner, Mom)", text: $relation)
                 }
 
+                datesSection
+
                 if isEditing, let p = person {
                     sizeSection(for: p)
                     orderSection(for: p)
@@ -102,6 +112,26 @@ struct AddEditPersonView: View {
             .sheet(isPresented: $showAvatarPicker) {
                 AvatarPickerSheet(selectedEmoji: $emoji)
                     .presentationDetents([.medium, .large])
+            }
+        }
+    }
+
+    private var datesSection: some View {
+        Section("Important Dates") {
+            // Date 1
+            Toggle("Add a date", isOn: $hasDate1.animation())
+            if hasDate1 {
+                TextField("Label (e.g. Birthday)", text: $date1Label)
+                DatePicker("Date", selection: $date1, displayedComponents: .date)
+            }
+
+            // Date 2 — only shown once date 1 is enabled
+            if hasDate1 {
+                Toggle("Add a second date", isOn: $hasDate2.animation())
+                if hasDate2 {
+                    TextField("Label (e.g. Anniversary)", text: $date2Label)
+                    DatePicker("Date", selection: $date2, displayedComponents: .date)
+                }
             }
         }
     }
@@ -297,6 +327,16 @@ struct AddEditPersonView: View {
         name = p.name
         emoji = p.emoji.isEmpty ? "👤" : p.emoji
         relation = p.relation
+        if let d = p.date1 {
+            hasDate1 = true
+            date1 = d
+            date1Label = p.date1Label
+        }
+        if let d = p.date2 {
+            hasDate2 = true
+            date2 = d
+            date2Label = p.date2Label
+        }
     }
 
     private func save() {
@@ -308,6 +348,10 @@ struct AddEditPersonView: View {
             p.name = trimmedName
             p.emoji = emoji
             p.relation = relation
+            p.date1 = hasDate1 ? date1 : nil
+            p.date1Label = hasDate1 ? date1Label : ""
+            p.date2 = (hasDate1 && hasDate2) ? date2 : nil
+            p.date2Label = (hasDate1 && hasDate2) ? date2Label : ""
         } else {
             // Add mode — assign next sortOrder
             let nextOrder = (persons.map(\.sortOrder).max() ?? -1) + 1
@@ -319,6 +363,10 @@ struct AddEditPersonView: View {
                 colorHex: colorHex,
                 sortOrder: nextOrder
             )
+            newPerson.date1 = hasDate1 ? date1 : nil
+            newPerson.date1Label = hasDate1 ? date1Label : ""
+            newPerson.date2 = (hasDate1 && hasDate2) ? date2 : nil
+            newPerson.date2Label = (hasDate1 && hasDate2) ? date2Label : ""
             modelContext.insert(newPerson)
         }
         // Save before dismissing so persistentModelID is stable for matchedGeometryEffect
